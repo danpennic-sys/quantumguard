@@ -1,0 +1,8 @@
+{
+  "alg": "ed25519",
+  "payload": "UXVhbnR1bUd1YXJkIGV2aWRlbmNlIHBheWxvYWQgdjEgLSBrbm93biBnb29k",
+  "payload_hash": "71b8737c3c1128bb466c53e821f5cf1a1e765b82041a60c46672226b73a16dfc",
+  "public_key": "79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664",
+  "signature": "5cfd916f92143149a71f02eb7d7220b432d28f4d160a1c53978966e362c0c273572627bed2915cbfefe0a05cecde42b9869a85d782f773a412c7d2759e169c00",
+  "version": "1"
+}
