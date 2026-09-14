@@ -28,8 +28,8 @@ No PQC claims appear in v1 documentation.
 No PQC behavior affects v1 outputs.
 
 **Rule 2 — PQC-1 is a separate contract**  
-A new file `CONTRACT-PQC-1.md` will define PQC behavior, inputs, outputs, and invariants.  
-It does not exist yet.
+`CONTRACT-PQC-1.md` defines PQC-1 behavior, inputs, outputs, and invariants.  
+It currently describes the deterministic stub, not production ML-DSA-65.
 
 **Rule 3 — PQC signatures operate on the same message bytes**  
 ML-DSA-65 signs the same bytes that v1 uses for its signature input (the raw `payload_hash` bytes in the current v1 design).  
@@ -55,8 +55,8 @@ Conformance vectors + tests remain the arbiter of correctness for PQC-1.
 - ML-DSA-65 verification
 - PQC golden fixtures
 - PQC extension to the test/replay harness
-- Future CLI flag: `--pqc` (not implemented yet)
-- Future HTTP parameter: `?pqc=true` (not implemented yet)
+- CLI flag: `--pqc` (opt-in stub; shipped)
+- HTTP parameter: `?pqc=true` (opt-in stub; shipped)
 
 ### Excluded
 
@@ -134,9 +134,7 @@ The test suite must reject any drift from the golden result.
 
 ---
 
-## 8. CLI / HTTP Behavior (future)
-
-When (and only when) implemented:
+## 8. CLI / HTTP Behavior (shipped — stub)
 
 **CLI**
 ```
@@ -148,17 +146,18 @@ qg verify --pqc <bundle.json>
 POST /verify?pqc=true
 ```
 
-Expected combined output shape (indicative):
+Combined output is defined by `CONTRACT-PQC-1.md`. Default (`pqc` disabled):
 
 ```json
 {
-  "v1": "PASS",
-  "pqc": "PASS"
+  "verdict": "PASS",
+  "reason": "valid",
+  "pqc": null
 }
 ```
 
 v1 result remains authoritative.  
-PQC result is additional information only.
+PQC result is additional information only and must never change v1.
 
 ---
 
@@ -174,23 +173,21 @@ PQC-1 is experimental, parallel, and versioned.
 
 ## 10. Current State
 
-| Item                         | Status        |
-|------------------------------|---------------|
-| This initialization document | Written       |
-| CONTRACT-PQC-1.md            | Not written   |
-| ML-DSA-65 implementation     | Not started   |
-| Golden fixtures              | Not created   |
-| CLI / HTTP PQC flags         | Not started   |
-| v1 code                      | Untouched     |
+| Item                         | Status              |
+|------------------------------|---------------------|
+| This initialization document | Written             |
+| CONTRACT-PQC-1.md            | Written (stub)      |
+| ML-DSA-65 implementation     | Stub only           |
+| Golden fixtures              | Stub goldens        |
+| CLI / HTTP PQC flags         | Shipped (opt-in)    |
+| v1 code                      | Untouched           |
 
 ---
 
 ## 11. Next Vectors (choose deliberately)
 
-- Draft `CONTRACT-PQC-1.md`
-- Create keygen / sign / verify stubs under `verifier/v2/`
-- Add PQC golden fixtures
-- Extend test harness for PQC
+- Replace the stub with real ML-DSA-65 (filippo.io/mldsa)
+- Add signed PQC goldens (not stub INDETERMINATE)
 - Or stop and hold
 
 Quiet cadence. No drift.

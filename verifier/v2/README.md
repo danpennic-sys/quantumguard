@@ -1,26 +1,24 @@
 # QuantumGuard Verifier v2 (PQC Track)
 
-**Status:** Scaffold only — not implemented  
+**Status:** Deterministic stub — ML-DSA-65 crypto not implemented  
 **Algorithm target:** ML-DSA-65  
-**Governing document:** `../../UPGRADE-v1-to-v2.md`
+**Governing documents:** `../../CONTRACT-PQC-1.md`, `../../UPGRADE-v1-to-v2.md`
 
 ## Rules
 
-- v1 code remains completely untouched.
-- This package will eventually handle ML-DSA-65 bundles.
-- Until the implementation is complete and proven, any v2 bundle MUST be treated as `INDETERMINATE` by the main verifier.
-- No hybrid signatures.
-- No algorithm negotiation.
-- Same three-verdict model.
-- Same single-verifier architecture (this will be integrated, not run in parallel).
+- v1 code remains completely untouched (`verifier/verifier.go`).
+- PQC-1 is opt-in (`--pqc` / `?pqc=true`). Default `pqc` is JSON `null`.
+- The PQC result never changes the v1 verdict, HTTP status, or CLI exit code.
+- Message bytes come only from `verifier.CanonicalBytes` (raw `payload_hash`).
+- No hybrid signatures. No algorithm negotiation.
+- Same three-verdict model. Same determinism / offline invariants.
 
-## Planned contents (future)
+## Current contents
 
-- ML-DSA-65 verification path
-- Type-prefixed or versioned bundle parsing
-- v2-specific conformance vectors under `../../vectors/v2/`
-- Integration into the single top-level `VerifyJSON` entry point
+- `pqc.go` — stub verifier + combined CLI/HTTP envelope
+- Replay goldens under `../../vectors/v2/`
 
-## Current state
+## Not yet
 
-Empty. No crypto. No dependencies added yet.
+- Real ML-DSA-65 (e.g. filippo.io/mldsa)
+- Production PQC evidence fields

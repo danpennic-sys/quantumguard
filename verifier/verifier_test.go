@@ -1,6 +1,7 @@
 package verifier_test
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
@@ -71,5 +72,23 @@ func TestMalformedJSON_INDETERMINATE(t *testing.T) {
 	res := verifier.VerifyJSON([]byte(`{not json`))
 	if res.Verdict != verifier.INDETERMINATE {
 		t.Fatalf("expected INDETERMINATE, got %s", res.Verdict)
+	}
+}
+
+func TestV1ResultJSONUnchanged(t *testing.T) {
+	res := verifier.VerifyJSON(load(t, "01_known_good.json"))
+	raw, err := json.Marshal(res)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var m map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &m); err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := m["pqc"]; ok {
+		t.Fatalf("v1 Result JSON must not include pqc, got %s", raw)
+	}
+	if string(m["verdict"]) != `"PASS"` {
+		t.Fatalf("v1 verdict drifted: %s", raw)
 	}
 }

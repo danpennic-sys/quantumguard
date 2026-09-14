@@ -54,6 +54,18 @@ go run ./cmd/qg-http &
 curl -s -X POST --data-binary @vectors/01_known_good.json http://localhost:8080/verify
 ```
 
+## Experimental: PQC-1 (opt-in stub)
+
+PQC-1 does **not** change v1. It is off by default (`pqc` is JSON `null`).
+
+```bash
+go run ./cmd/qg verify --pqc vectors/01_known_good.json
+curl -s -X POST --data-binary @vectors/01_known_good.json 'http://localhost:8080/verify?pqc=true'
+```
+
+This path is a deterministic stub. It does not implement ML-DSA-65 and
+does not claim quantum resistance. See `CONTRACT-PQC-1.md`.
+
 ## Conformance vectors
 
 | Vector                        | Expected        |

@@ -1,4 +1,4 @@
-# Gaps Board — Updated 2026-09-12 (proxy retired)
+# Gaps Board — Updated 2026-09-14 (PQC-1 stub opt-in)
 
 ## Frozen / Done
 
@@ -23,10 +23,12 @@ Normative docs:
 |-----------------------------------|-----------------------|
 | ML-DSA-65 decision                | LOCKED                |
 | Type-Prefixed / versioned design  | DOCUMENTED            |
-| `verifier/v2` package             | SCAFFOLD ONLY         |
+| `CONTRACT-PQC-1.md`               | WRITTEN (stub)        |
+| `verifier/v2` package             | STUB SHIPPED          |
+| CLI `--pqc` / HTTP `?pqc=true`    | SHIPPED (opt-in stub) |
+| Envelope goldens (`vectors/v2`)   | SHIPPED               |
 | filippo.io/mldsa integration      | NOT STARTED           |
-| v2 conformance vectors            | NOT CREATED           |
-| Actual PQC verification code      | NOT STARTED           |
+| Actual ML-DSA-65 verification     | NOT STARTED           |
 
 ## Still Open
 
