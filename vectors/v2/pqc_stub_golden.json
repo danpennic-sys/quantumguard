@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "reason": "valid",
+  "pqc": {
+    "verdict": "INDETERMINATE",
+    "reason": "pqc-1 stub: ML-DSA-65 not implemented",
+    "alg": "ml-dsa-65",
+    "stub": true
+  }
+}

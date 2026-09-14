@@ -3,56 +3,69 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"quantumguard/verifier"
+	v2 "quantumguard/verifier/v2"
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Fprintf(os.Stderr, "usage: qg verify <bundle.json>\n")
+	path, pqc, err := parseArgs(os.Args[1:])
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(2)
 	}
-
-	cmd := os.Args[1]
-	switch cmd {
-	case "verify":
-		if len(os.Args) != 3 {
-			fmt.Fprintf(os.Stderr, "usage: qg verify <bundle.json>\n")
-			os.Exit(2)
-		}
-		runVerify(os.Args[2])
-	default:
-		fmt.Fprintf(os.Stderr, "unknown command: %s\n", cmd)
-		os.Exit(2)
-	}
+	os.Exit(runVerify(path, pqc))
 }
 
-func runVerify(path string) {
+func parseArgs(args []string) (path string, pqc bool, err error) {
+	if len(args) == 0 {
+		return "", false, fmt.Errorf("usage: qg verify [--pqc] <bundle.json>")
+	}
+	if args[0] != "verify" {
+		return "", false, fmt.Errorf("unknown command: %s", args[0])
+	}
+
+	var files []string
+	for _, a := range args[1:] {
+		switch a {
+		case "--pqc":
+			pqc = true
+		default:
+			if strings.HasPrefix(a, "-") {
+				return "", false, fmt.Errorf("unknown flag: %s\nusage: qg verify [--pqc] <bundle.json>", a)
+			}
+			files = append(files, a)
+		}
+	}
+	if len(files) != 1 {
+		return "", false, fmt.Errorf("usage: qg verify [--pqc] <bundle.json>")
+	}
+	return files[0], pqc, nil
+}
+
+func runVerify(path string, pqc bool) int {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "read error: %v\n", err)
-		os.Exit(2)
+		return 2
 	}
 
-	result := verifier.VerifyJSON(data)
-
-	// Machine-readable output
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	if err := enc.Encode(result); err != nil {
+	result := v2.Verify(data, pqc)
+	if err := v2.Encode(os.Stdout, result); err != nil {
 		fmt.Fprintf(os.Stderr, "encode error: %v\n", err)
-		os.Exit(2)
+		return 2
 	}
 
+	// Exit code follows the v1 verdict only. PQC never changes it.
 	switch result.Verdict {
 	case verifier.PASS:
-		os.Exit(0)
+		return 0
 	case verifier.FAIL:
-		os.Exit(1)
-	default: // INDETERMINATE
-		os.Exit(3)
+		return 1
+	default:
+		return 3
 	}
 }
