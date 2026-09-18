@@ -1,6 +1,6 @@
 # QuantumGuard — Marketing Hub
 
-**Status:** Ready for public push  
+**Status:** Ready for public push + commercial Operator Pack  
 **Product truth:** v1 is classical (Ed25519), deterministic, offline. PQC is reserved, not shipped.
 
 ---
@@ -41,7 +41,7 @@ Secondary:
 - Explicit three-verdict model
 - Fully offline operation
 - Frozen, inspectable v1 contract
-- Dual license (MIT OR Apache-2.0)
+- Dual license (MIT OR Apache-2.0) for public source
 
 **We do not claim**
 - Post-quantum security (not shipped)
@@ -49,7 +49,27 @@ Secondary:
 - Freshness / timestamp validation
 - Production hardening beyond the proven contract
 
-## 5. Short announcement (copy-paste)
+## 5. GitHub storefront model
+
+| Layer | Repo | Visibility | Role |
+|-------|------|------------|------|
+| Open core | [quantumguard](https://github.com/danpennic-sys/quantumguard) | Public | Source, CONTRACT-v1, vectors, CLI/HTTP |
+| Operator Pack | [quantumguard-operator](https://github.com/danpennic-sys/quantumguard-operator) | **Private** | Signed binaries, runbooks, LICENSE.json, support |
+
+**Fulfillment**
+
+1. Buyer pays (Stripe Checkout or invoice).
+2. Buyer gets GitHub collaborator access to `quantumguard-operator` **or** a signed tarball + `LICENSE.json`.
+3. Public README links to purchase contact; private repo holds licensed assets.
+
+**Pricing (list)**  
+- Operator Pack single site: $490 one-time or $1,490/year  
+- Air-gap / site license: custom  
+Contact: danpennic@gmail.com
+
+See private repo `docs/STOREFRONT.md` for operational checklist.
+
+## 6. Short announcement (copy-paste)
 
 **GitHub / X / LinkedIn**
 
@@ -63,9 +83,11 @@ No network. No wall-clock. No external trust.
 Contract is frozen. Tests are green.  
 PQC track (ML-DSA-65) is reserved, not invented.
 
+Operator Pack (signed binaries + air-gap runbooks): contact danpennic@gmail.com
+
 → https://github.com/danpennic-sys/quantumguard
 
-## 6. Longer announcement (blog / README hero)
+## 7. Longer announcement (blog / README hero)
 
 Most “verifiers” are actually distributed systems in disguise.  
 They call out to registries, check clocks, or maintain multiple code paths that slowly diverge.
@@ -86,22 +108,23 @@ The gaps board in `PATCHES.md` stays honest about everything that is still missi
 This is the baseline.  
 Everything else layers on top without breaking the invariants.
 
-## 7. Channel plan (lightweight)
+## 8. Channel plan (lightweight)
 
 | Channel        | Action                                      | Priority |
 |----------------|---------------------------------------------|----------|
-| GitHub repo    | Already public                              | Done     |
+| GitHub public  | Open core + storefront section in README    | Done     |
+| GitHub private | Operator Pack license repo                  | Done     |
+| Stripe         | Checkout for Operator Pack                  | Next     |
 | X / Twitter    | Post short announcement                     | High     |
 | LinkedIn       | Post longer version                         | Medium   |
-| README         | Keep technical + add one-line positioning   | High     |
 | Docs / blog    | Optional deeper write-up later              | Low      |
 
-No paid ads. No landing page required yet.  
-Product is the proof.
+No paid ads until first design partners. Product is the proof.
 
-## 8. Success signal for this push
+## 9. Success signal for this push
 
-- Repo is independently clonable and `go test ./...` passes
+- Public repo clonable; `go test ./...` passes
+- Private Operator Pack repo structured and invite-ready
 - Announcement states only what is true
 - No one can honestly accuse the project of claiming PQC before it exists
 
