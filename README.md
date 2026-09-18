@@ -79,13 +79,25 @@ does not claim quantum resistance. See `CONTRACT-PQC-1.md`.
 
 CLI and HTTP must produce identical verdicts on every vector.
 
+## Operator Pack (commercial)
+
+Source and CONTRACT-v1 remain free (MIT OR Apache-2.0).
+
+**Operator Pack** adds signed binaries, air-gap runbooks, conformance kits, license files, and support under a commercial license.
+
+- Private license repo (access after purchase): [danpennic-sys/quantumguard-operator](https://github.com/danpennic-sys/quantumguard-operator)
+- Purchase / access: **danpennic@gmail.com**
+- Claims stay honest: no PQC, no network trust, no wall-clock inside the verifier
+
+See `MARKETING.md` for positioning.
+
 ## Non-goals (today)
 
 - Post-quantum signatures
 - Key registries / DNS / revocation
 - Wall-clock or freshness checks
 - Second verifier implementation
-- Payment integration
+- Built-in payment integration in this public repo
 
 ## License
 
