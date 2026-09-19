@@ -36,6 +36,7 @@ quantumguard/
 ├── http/              # HTTP handler package
 ├── vectors/           # conformance test vectors
 ├── evidence/          # (reserved)
+├── docs/              # domain bridges
 ├── README.md
 └── PATCHES.md
 ```
@@ -79,6 +80,19 @@ does not claim quantum resistance. See `CONTRACT-PQC-1.md`.
 
 CLI and HTTP must produce identical verdicts on every vector.
 
+## Domain profiles
+
+QuantumGuard is integrity-only. Domain policy lives in profiles:
+
+| Profile | Repo | Role |
+|---------|------|------|
+| Robotics Trust Profile (RTP) v1.0 | [robotics-trust-profile](https://github.com/danpennic-sys/robotics-trust-profile) | Kinematic / spatial / cross-sensor admissibility for robot GIRs |
+
+Deep bridge (canonical GIR hashing, dual-verdict audit, actuation interlock):  
+https://github.com/danpennic-sys/robotics-trust-profile/blob/main/docs/QUANTUMGUARD-BRIDGE.md
+
+Also see `docs/RTP.md` in this repo for a short pointer.
+
 ## Operator Pack (commercial)
 
 Source and CONTRACT-v1 remain free (MIT OR Apache-2.0).
@@ -98,6 +112,7 @@ See `MARKETING.md` for positioning.
 - Wall-clock or freshness checks
 - Second verifier implementation
 - Built-in payment integration in this public repo
+- Domain geometry or kinematics (use RTP or other profiles)
 
 ## License
 
