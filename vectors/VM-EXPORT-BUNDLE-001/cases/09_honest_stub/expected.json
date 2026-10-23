@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "code": "NOT_IMPLEMENTED",
+  "detail": "adr_anchor: NOT IMPLEMENTED in v1.0 — see VM-EXPORT-BUNDLE-001 §10.2"
+}
