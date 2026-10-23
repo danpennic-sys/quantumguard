@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-10-23T15:00:00Z",
+  "files": [
+    {"name": "bundle.json", "hash": "aaa", "size": 100},
+    {"name": "bundle.json", "hash": "bbb", "size": 200}
+  ]
+}
