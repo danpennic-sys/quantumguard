@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-10-23T15:00:00Z",
+  "state_hash": "f85c68765a0c2a11099fa68d849c0c1456b41c0a826f2df0eafea44e72f147f6",
+  "require_adr_anchor": true,
+  "files": [{"name": "bundle.json", "hash": "aaa", "size": 100}],
+  "state": {
+    "schema_version": "1.0",
+    "created_at": "2026-10-23T15:00:00Z",
+    "root_hash": "deadbeef",
+    "files": [{"name": "bundle.json", "hash": "aaa", "size": 100}],
+    "extra": {}
+  }
+}
