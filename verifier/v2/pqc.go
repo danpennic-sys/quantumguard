@@ -10,6 +10,7 @@ import (
 // Result is the PQC-1 verification outcome. It never replaces the v1 verdict.
 type Result struct {
 	Verdict verifier.Verdict `json:"verdict"`
+	Code    string           `json:"code,omitempty"`
 	Reason  string           `json:"reason,omitempty"`
 	Alg     string           `json:"alg"`
 	Stub    bool             `json:"stub"`
@@ -17,10 +18,12 @@ type Result struct {
 
 // Combined is the CLI/HTTP envelope.
 //
-// v1 fields (verdict, reason) are produced solely by verifier.VerifyJSON.
+// v1 fields (verdict, code, reason) are produced solely by verifier.VerifyJSON.
 // PQC is null when the opt-in flag is disabled, and never mutates v1.
+// Code is the stable, normative reason code; Reason is non-normative prose.
 type Combined struct {
 	Verdict verifier.Verdict `json:"verdict"`
+	Code    string           `json:"code"`
 	Reason  string           `json:"reason,omitempty"`
 	PQC     *Result          `json:"pqc"`
 }
@@ -28,6 +31,7 @@ type Combined struct {
 const (
 	algMLDSA65      = "ml-dsa-65"
 	stubReason      = "pqc-1 stub: ML-DSA-65 not implemented"
+	stubCode        = "E_PQC_STUB"
 	canonicalPrefix = "canonical_bytes: "
 )
 
@@ -41,6 +45,7 @@ func VerifyPQC(data []byte) Result {
 	if err != nil {
 		return Result{
 			Verdict: verifier.INDETERMINATE,
+			Code:    verifier.CodeIncomplete,
 			Reason:  canonicalPrefix + err.Error(),
 			Alg:     algMLDSA65,
 			Stub:    true,
@@ -51,6 +56,7 @@ func VerifyPQC(data []byte) Result {
 	if len(msg) != 32 {
 		return Result{
 			Verdict: verifier.INDETERMINATE,
+			Code:    verifier.CodeMalformedEncoding,
 			Reason:  canonicalPrefix + "payload_hash must be 32 bytes",
 			Alg:     algMLDSA65,
 			Stub:    true,
@@ -58,6 +64,7 @@ func VerifyPQC(data []byte) Result {
 	}
 	return Result{
 		Verdict: verifier.INDETERMINATE,
+		Code:    stubCode,
 		Reason:  stubReason,
 		Alg:     algMLDSA65,
 		Stub:    true,
@@ -65,11 +72,12 @@ func VerifyPQC(data []byte) Result {
 }
 
 // Verify runs the frozen v1 verifier, then optionally the PQC-1 stub.
-// enablePQC does not change the v1 verdict, reason, or evidence semantics.
+// enablePQC does not change the v1 verdict, code, reason, or evidence semantics.
 func Verify(data []byte, enablePQC bool) Combined {
 	v1 := verifier.VerifyJSON(data)
 	out := Combined{
 		Verdict: v1.Verdict,
+		Code:    v1.Code,
 		Reason:  v1.Reason,
 		PQC:     nil,
 	}
