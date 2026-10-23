@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "code": "DUPLICATE_PATH",
+  "detail": "path appears more than once: bundle.json"
+}
