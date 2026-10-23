@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "code": "EXTRA_FILE",
+  "detail": "unauthorized file present in bundle: evil.txt"
+}
