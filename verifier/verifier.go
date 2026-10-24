@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
+// Copyright (c) 2026 danpennic-sys
+
 // Package verifier implements the single deterministic QuantumGuard evidence verifier.
 //
 // Contract v1 (locked):
@@ -81,7 +84,6 @@ func VerifyJSON(data []byte) Result {
 
 // Verify performs deterministic verification of a parsed Bundle.
 func Verify(b Bundle) Result {
-	// --- Structural / completeness checks → INDETERMINATE ---
 	if strings.TrimSpace(b.Version) == "" ||
 		strings.TrimSpace(b.Payload) == "" ||
 		strings.TrimSpace(b.PayloadHash) == "" ||
@@ -99,7 +101,6 @@ func Verify(b Bundle) Result {
 		return Result{Verdict: INDETERMINATE, Code: CodeUnsupportedAlg, Reason: fmt.Sprintf("unsupported alg: %q", b.Alg)}
 	}
 
-	// Decode fields. Any decode failure → INDETERMINATE (malformed encoding).
 	payload, err := base64.StdEncoding.DecodeString(b.Payload)
 	if err != nil {
 		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "payload is not valid base64"}
@@ -129,15 +130,11 @@ func Verify(b Bundle) Result {
 		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: fmt.Sprintf("public_key must be %d bytes, got %d", ed25519.PublicKeySize, len(pub))}
 	}
 
-	// --- Cryptographic checks → FAIL or PASS ---
-
-	// 1. Hash must match
 	computed := sha256.Sum256(payload)
 	if !hmacEqual(computed[:], payloadHash) {
 		return Result{Verdict: FAIL, Code: CodeHashMismatch, Reason: "payload_hash does not match SHA-256 of payload"}
 	}
 
-	// 2. Signature must verify over the raw payload_hash bytes
 	if !ed25519.Verify(ed25519.PublicKey(pub), payloadHash, sig) {
 		return Result{Verdict: FAIL, Code: CodeSigFail, Reason: "signature verification failed"}
 	}
@@ -145,7 +142,6 @@ func Verify(b Bundle) Result {
 	return Result{Verdict: PASS, Code: CodeOK, Reason: "valid"}
 }
 
-// hmacEqual is a constant-time comparison.
 func hmacEqual(a, b []byte) bool {
 	if len(a) != len(b) {
 		return false
