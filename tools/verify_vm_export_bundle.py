@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT OR Apache-2.0
+# Copyright (c) 2026 danpennic-sys
 """
 VM-EXPORT-BUNDLE-001 — fail-closed verifier skeleton (verify-only).
 
@@ -50,13 +52,11 @@ def compute_replay_merkle_root(events: list[dict]) -> str:
 
 def verify_case(input_data: dict) -> dict:
     """Return {verdict, code, detail?, computed_*?} — fail-closed."""
-    # 1. Both hashes claimed
     has_state = bool(input_data.get("state_hash"))
     has_merkle = bool(input_data.get("replay_merkle_root"))
     if has_state and has_merkle:
         return {"verdict": "FAIL", "code": "BOTH_HASHES_CLAIMED"}
 
-    # 2. Zip-slip / path checks
     files = input_data.get("files") or []
     seen = set()
     for f in files:
@@ -75,7 +75,6 @@ def verify_case(input_data: dict) -> dict:
             }
         seen.add(name)
 
-    # 3. Extra-file rejection
     extracted = input_data.get("extracted_files")
     if extracted is not None:
         allowed = {"bundle.json", "signature.ed25519", "public_key.pem"} | {
@@ -89,15 +88,13 @@ def verify_case(input_data: dict) -> dict:
                     "detail": f"unauthorized file present in bundle: {name}",
                 }
 
-    # 4. Honest stubs
     if input_data.get("require_adr_anchor"):
         return {
             "verdict": "FAIL",
             "code": "NOT_IMPLEMENTED",
-            "detail": "adr_anchor: NOT IMPLEMENTED in v1.0 — see VM-EXPORT-BUNDLE-001 §10.2",
+            "detail": "adr_anchor: NOT IMPLEMENTED in v1.0 — see VM-EXPORT-BUNDLE-001 §3.1",
         }
 
-    # 5. state_hash path
     if has_state:
         state = input_data.get("state")
         if state is None:
@@ -120,7 +117,6 @@ def verify_case(input_data: dict) -> dict:
             "computed_state_hash": computed,
         }
 
-    # 6. replay_merkle_root path
     if has_merkle:
         events = input_data.get("events") or []
         computed = compute_replay_merkle_root(events)
@@ -133,7 +129,6 @@ def verify_case(input_data: dict) -> dict:
             "computed_replay_merkle_root": computed,
         }
 
-    # Nothing claimed and no suppression → fail closed
     return {
         "verdict": "FAIL",
         "code": "NOT_IMPLEMENTED",
