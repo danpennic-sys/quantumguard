@@ -3,12 +3,14 @@ name: CI
 on:
   push:
     branches: [main]
+    tags:
+      - 'v*'
   pull_request:
-    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,7 +22,7 @@ jobs:
       - name: Vet
         run: go vet ./...
 
-      - name: Test (race detector)
+      - name: Test
         run: go test -race ./...
 
       - name: Build qg
@@ -28,3 +30,51 @@ jobs:
 
       - name: Build qg-http
         run: go build -o qg-http ./cmd/qg-http
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
+
+      - name: Build release binaries
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          EXT=""
+          if [ "$GOOS" = "windows" ]; then EXT=".exe"; fi
+
+          go build -trimpath -ldflags="-s -w" \
+            -o "dist/qg-${GOOS}-${GOARCH}${EXT}" ./cmd/qg
+
+          go build -trimpath -ldflags="-s -w" \
+            -o "dist/qg-http-${GOOS}-${GOARCH}${EXT}" \
+            ./cmd/qg-http
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*
