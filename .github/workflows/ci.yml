@@ -14,19 +14,17 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
-
-      - name: Download modules
-        run: go mod download
+          go-version: '1.23'
+          cache: true
 
       - name: Vet
         run: go vet ./...
 
-      - name: Test
-        run: go test -race -count=1 ./...
+      - name: Test (race detector)
+        run: go test -race ./...
 
-      - name: Build CLI
-        run: go build -o bin/qg ./cmd/qg
+      - name: Build qg
+        run: go build -o qg ./cmd/qg
 
-      - name: Build HTTP
-        run: go build -o bin/qg-http ./cmd/qg-http
+      - name: Build qg-http
+        run: go build -o qg-http ./cmd/qg-http
