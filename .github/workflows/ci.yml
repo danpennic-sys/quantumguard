@@ -7,6 +7,9 @@ on:
       - 'v*'
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -36,45 +39,21 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        include:
-          - goos: linux
-            goarch: amd64
-          - goos: linux
-            goarch: arm64
-          - goos: darwin
-            goarch: amd64
-          - goos: darwin
-            goarch: arm64
-          - goos: windows
-            goarch: amd64
-
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-go@v5
         with:
           go-version: '1.23'
           cache: true
 
-      - name: Build release binaries
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-          CGO_ENABLED: 0
-        run: |
-          EXT=""
-          if [ "$GOOS" = "windows" ]; then EXT=".exe"; fi
-
-          go build -trimpath -ldflags="-s -w" \
-            -o "dist/qg-${GOOS}-${GOARCH}${EXT}" ./cmd/qg
-
-          go build -trimpath -ldflags="-s -w" \
-            -o "dist/qg-http-${GOOS}-${GOARCH}${EXT}" \
-            ./cmd/qg-http
-
-      - uses: actions/upload-artifact@v4
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
         with:
-          name: release-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: dist/*
+          distribution: goreleaser
+          version: '~> v2'
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
