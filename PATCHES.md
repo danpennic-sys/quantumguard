@@ -1,7 +1,7 @@
-# Gaps Board — Updated 2026-10-28 (seat pass)
+# Gaps Board — Updated 2026-10-28 (truth pass)
 
-Checked against `main` commit `603078e` and tag `v1.0.0` (`28045276`).
-`go test -race ./...` was re-run locally on go1.23.12 linux/amd64 on 2026-10-28: PASS.
+Checked against `main` commit `6bf12f2` and tag `v1.0.0` (`28045276`).
+`go test -race ./...` re-run locally on go1.23.12 linux/amd64 on 2026-10-28: PASS.
 The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–06 INDETERMINATE.
 
 ## Frozen / Done
@@ -41,13 +41,11 @@ Normative docs:
 
 ## Still Open
 
-| Item                        | Status                          |
-|-----------------------------|---------------------------------|
-| yourmodule L10 resolution   | UNRESOLVED                      |
-| CP-01 → CP-08               | EMPTY                           |
+| Item                        | Status                                                                 |
+|-----------------------------|------------------------------------------------------------------------|
 | Chat proxy payload          | **RETIRED 2026-09-12** — operatorpagesllc archived path; not in this tree |
-| Stripe / commercial path    | **CHECKOUT NOT LIVE.** List price remains $490 once or $1,490/year (`MARKETING.md`). `stripe-test/` is a $10 test-mode harness and is not the SKU. Runbook: `docs/OPERATOR-PACK-CHECKOUT.md`. |
-| Next tag after `v1.0.0`     | NOT CUT. Do not retag `v1.0.0`. |
+| Stripe / commercial path    | **CHECKOUT NOT LIVE.** No Payment Link exists. List price is $490 once or $1,490/year (`MARKETING.md`). `stripe-test/` is a $10 test-mode harness only and is not the SKU. Runbook: `docs/OPERATOR-PACK-CHECKOUT.md`. Do not claim “ready to buy” until a live Stripe link is published and the README purchase line is updated in the same hour. |
+| Next tag after `v1.0.0`     | NOT CUT. Do not retag or move `v1.0.0`.                                |
 
 ## Discipline
 
@@ -57,3 +55,4 @@ Normative docs:
 - Replay harness remains the arbiter of correctness.
 - Chat proxy retirement is not a verifier change.
 - One verdict path. `rust/qg-mldsa65` and the VM-EXPORT tools do not replace `qg`.
+- Operator Pack checkout remains unpaid and offline until the Stripe live link exists.
