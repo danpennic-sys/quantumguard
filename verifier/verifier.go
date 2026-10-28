@@ -16,9 +16,9 @@
 //
 // Verdict rules (no network, no wall-clock, no external trust):
 //
-//	- Malformed / incomplete / unsupported → INDETERMINATE
-//	- Well-formed but cryptographically wrong → FAIL
-//	- Well-formed and cryptographically valid → PASS
+//   - Malformed / incomplete / unsupported → INDETERMINATE
+//   - Well-formed but cryptographically wrong → FAIL
+//   - Well-formed and cryptographically valid → PASS
 //
 // Reason codes are stable, machine-readable, and normative for cross-implementation
 // conformance. The Reason string is human-readable detail and non-normative.
