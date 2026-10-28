@@ -1,5 +1,16 @@
 # QuantumGuard Stripe Test Slice
 
+This directory is **not** the Operator Pack.
+
+| | This harness | Operator Pack (the seat) |
+|---|---|---|
+| Amount | $10 | $490 once, or $1,490/year |
+| Mode | Stripe test mode only | Live Payment Link, created in the Dashboard |
+| Proves | Webhook signature + `payments.json` | A paid seat |
+| Connects to `qg` | No | No. Fulfillment is a human, after payment |
+
+List price and fulfillment rules: `../MARKETING.md` and `../docs/OPERATOR-PACK-CHECKOUT.md`. Do not commit `sk_live_`, `sk_test_`, or `whsec_` values.
+
 Isolated Stripe Checkout test flow for QuantumGuard.
 
 ## Design rules

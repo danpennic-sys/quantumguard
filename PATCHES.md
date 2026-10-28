@@ -1,4 +1,8 @@
-# Gaps Board — Updated 2026-09-14 (PQC-1 stub opt-in)
+# Gaps Board — Updated 2026-10-28 (seat pass)
+
+Checked against `main` commit `603078e` and tag `v1.0.0` (`28045276`).
+`go test -race ./...` was re-run locally on go1.23.12 linux/amd64 on 2026-10-28: PASS.
+The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–06 INDETERMINATE.
 
 ## Frozen / Done
 
@@ -12,10 +16,14 @@
 | Conformance vectors (v1)          | DONE        |
 | Three-verdict model               | LOCKED      |
 | v1 → v2 Upgrade Contract          | **WRITTEN** |
+| Tagged release `v1.0.0`           | **DONE** (published 2026-09-28). Unsigned binaries + `SHA256SUMS.txt`. Not HSM-signed. Do not move this tag. |
+| Go CI on `main`                   | **DONE** (`.github/workflows/ci.yml`). Node publish workflow removed 2026-10-26. |
 
 Normative docs:
 - `CONTRACT-v1.md`
 - `UPGRADE-v1-to-v2.md`
+
+`main` has moved past `v1.0.0` (reason codes, VM-EXPORT-BUNDLE-001, the Rust ML-DSA crate, CI). That delta is not a new release. Cutting another tag is a product decision, not a docs fix.
 
 ## PQC Track (v2)
 
@@ -25,10 +33,11 @@ Normative docs:
 | Type-Prefixed / versioned design  | DOCUMENTED            |
 | `CONTRACT-PQC-1.md`               | WRITTEN (stub)        |
 | `verifier/v2` package             | STUB SHIPPED          |
-| CLI `--pqc` / HTTP `?pqc=true`    | SHIPPED (opt-in stub) |
+| CLI `--pqc` / HTTP `?pqc=true`    | SHIPPED (opt-in stub). Not ML-DSA. |
 | Envelope goldens (`vectors/v2`)   | SHIPPED               |
-| filippo.io/mldsa integration      | NOT STARTED           |
-| Actual ML-DSA-65 verification     | NOT STARTED           |
+| `filippo.io/mldsa` (Go)           | NOT STARTED           |
+| `rust/qg-mldsa65` (`fips204`)     | CRATE ON MAIN. Claims real FIPS 204 verify. **Not** wired into `qg`. End-to-end product vectors: 0. Not a shippable claim. |
+| Product ML-DSA-65 verification    | NOT SHIPPED           |
 
 ## Still Open
 
@@ -37,8 +46,8 @@ Normative docs:
 | yourmodule L10 resolution   | UNRESOLVED                      |
 | CP-01 → CP-08               | EMPTY                           |
 | Chat proxy payload          | **RETIRED 2026-09-12** — operatorpagesllc archived path; not in this tree |
-| Stripe / commercial path    | OFFER POSTED; checkout not live |
-| Tagged release              | NOT DONE                        |
+| Stripe / commercial path    | **CHECKOUT NOT LIVE.** List price remains $490 once or $1,490/year (`MARKETING.md`). `stripe-test/` is a $10 test-mode harness and is not the SKU. Runbook: `docs/OPERATOR-PACK-CHECKOUT.md`. |
+| Next tag after `v1.0.0`     | NOT CUT. Do not retag `v1.0.0`. |
 
 ## Discipline
 
@@ -47,3 +56,4 @@ Normative docs:
 - No silent modification of frozen behavior.
 - Replay harness remains the arbiter of correctness.
 - Chat proxy retirement is not a verifier change.
+- One verdict path. `rust/qg-mldsa65` and the VM-EXPORT tools do not replace `qg`.

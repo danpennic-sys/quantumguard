@@ -1,6 +1,6 @@
 # QuantumGuard — Marketing Hub
 
-**Status:** Ready for public push + commercial Operator Pack  
+**Status:** Source and `v1.0.0` are public. Operator Pack checkout is **not live**. Do not say "ready to buy" until a Stripe Payment Link actually charges the list price.  
 **Product truth:** v1 is classical (Ed25519), deterministic, offline. PQC is reserved, not shipped.
 
 ---
