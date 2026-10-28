@@ -9,26 +9,25 @@ Those binaries are unsigned. `SHA256SUMS.txt` on that release is the integrity r
 
 **LIVE** as of 2026-10-28.
 
-Payment Link (one-time $490): https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01
-
-Yearly ($1,490) link is not yet published.
+- One-time ($490): https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01
+- Yearly ($1,490): https://buy.stripe.com/cNibJ24H8gEJcRteoN0ZW02
 
 ## What the buyer is paying for
 
 - Operator Pages QuantumGuard, Operator Pack, single site
-- $490 once (live link above)
+- $490 once or $1,490 per year
 - Not post-quantum. Not QuantumGuard, Inc.
 
 `stripe-test/` stays a $10 test-mode harness. It is not this SKU.
 
-## Steps (already done for the one-time link)
+## Steps (both links live)
 
 1. Stripe Dashboard → Payment Links → New. One link per price.
 2. Product name: `Operator Pages QuantumGuard — Operator Pack (single site)`.
-3. Price: 49000 cents USD, one-time. Second link: 149000 cents USD, yearly (still pending).
+3. Price: 49000 cents USD, one-time. Second link: 149000 cents USD, yearly.
 4. Collect the buyer email. Do not collect a GitHub username on the card form unless you are ready to read it the same day.
 5. Run the link in test mode first. Card `4242 4242 4242 4242`. Confirm Stripe shows paid. Success-page HTML is not proof. The Dashboard payment is proof.
-6. Switch that link to live mode. Put the live URL in the README purchase line in the same hour it works. **Done.**
+6. Switch that link to live mode. Put the live URL in the README purchase line in the same hour it works. **Done for both.**
 7. Fulfill by hand:
    - Add the buyer as a collaborator on the private `quantumguard-operator` repo, or
    - Send the `v1.0.0` release assets plus `SHA256SUMS.txt` and `CONTRACT-v1.md`.

@@ -18,7 +18,8 @@ The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–
 | v1 → v2 Upgrade Contract          | **WRITTEN** |
 | Tagged release `v1.0.0`           | **DONE** (published 2026-09-28). Unsigned binaries + `SHA256SUMS.txt`. Not HSM-signed. Do not move this tag. |
 | Go CI on `main`                   | **DONE** (`.github/workflows/ci.yml`). Node publish workflow removed 2026-10-26. |
-| Operator Pack checkout            | **LIVE** — https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01 ($490 one-time) |
+| Operator Pack checkout (one-time) | **LIVE** — https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01 ($490) |
+| Operator Pack checkout (yearly)   | **LIVE** — https://buy.stripe.com/cNibJ24H8gEJcRteoN0ZW02 ($1,490/year) |
 
 Normative docs:
 - `CONTRACT-v1.md`
@@ -45,7 +46,6 @@ Normative docs:
 | Item                        | Status                                                                 |
 |-----------------------------|------------------------------------------------------------------------|
 | Chat proxy payload          | **RETIRED 2026-09-12** — operatorpagesllc archived path; not in this tree |
-| Yearly Operator Pack link   | Separate $1,490/year Payment Link not yet published                    |
 | Next tag after `v1.0.0`     | NOT CUT. Do not retag or move `v1.0.0`.                                |
 
 ## Discipline
