@@ -1,6 +1,6 @@
-# Gaps Board — Updated 2026-10-28 (truth pass)
+# Gaps Board — Updated 2026-10-28 (checkout live)
 
-Checked against `main` commit `6bf12f2` and tag `v1.0.0` (`28045276`).
+Checked against `main` and tag `v1.0.0` (`28045276`).
 `go test -race ./...` re-run locally on go1.23.12 linux/amd64 on 2026-10-28: PASS.
 The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–06 INDETERMINATE.
 
@@ -18,6 +18,7 @@ The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–
 | v1 → v2 Upgrade Contract          | **WRITTEN** |
 | Tagged release `v1.0.0`           | **DONE** (published 2026-09-28). Unsigned binaries + `SHA256SUMS.txt`. Not HSM-signed. Do not move this tag. |
 | Go CI on `main`                   | **DONE** (`.github/workflows/ci.yml`). Node publish workflow removed 2026-10-26. |
+| Operator Pack checkout            | **LIVE** — https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01 ($490 one-time) |
 
 Normative docs:
 - `CONTRACT-v1.md`
@@ -44,7 +45,7 @@ Normative docs:
 | Item                        | Status                                                                 |
 |-----------------------------|------------------------------------------------------------------------|
 | Chat proxy payload          | **RETIRED 2026-09-12** — operatorpagesllc archived path; not in this tree |
-| Stripe / commercial path    | **CHECKOUT NOT LIVE.** No Payment Link exists. List price is $490 once or $1,490/year (`MARKETING.md`). `stripe-test/` is a $10 test-mode harness only and is not the SKU. Runbook: `docs/OPERATOR-PACK-CHECKOUT.md`. Do not claim “ready to buy” until a live Stripe link is published and the README purchase line is updated in the same hour. |
+| Yearly Operator Pack link   | Separate $1,490/year Payment Link not yet published                    |
 | Next tag after `v1.0.0`     | NOT CUT. Do not retag or move `v1.0.0`.                                |
 
 ## Discipline
@@ -55,4 +56,4 @@ Normative docs:
 - Replay harness remains the arbiter of correctness.
 - Chat proxy retirement is not a verifier change.
 - One verdict path. `rust/qg-mldsa65` and the VM-EXPORT tools do not replace `qg`.
-- Operator Pack checkout remains unpaid and offline until the Stripe live link exists.
+- Fulfillment remains manual (collaborator invite or signed drop). No webhook auto-mint.
