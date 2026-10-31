@@ -31,7 +31,6 @@ type Combined struct {
 const (
 	algMLDSA65      = "ml-dsa-65"
 	stubReason      = "pqc-1 stub: ML-DSA-65 not implemented"
-	stubCode        = "E_PQC_STUB"
 	canonicalPrefix = "canonical_bytes: "
 )
 
@@ -45,7 +44,6 @@ func VerifyPQC(data []byte) Result {
 	if err != nil {
 		return Result{
 			Verdict: verifier.INDETERMINATE,
-			Code:    verifier.CodeIncomplete,
 			Reason:  canonicalPrefix + err.Error(),
 			Alg:     algMLDSA65,
 			Stub:    true,
@@ -56,7 +54,6 @@ func VerifyPQC(data []byte) Result {
 	if len(msg) != 32 {
 		return Result{
 			Verdict: verifier.INDETERMINATE,
-			Code:    verifier.CodeMalformedEncoding,
 			Reason:  canonicalPrefix + "payload_hash must be 32 bytes",
 			Alg:     algMLDSA65,
 			Stub:    true,
@@ -64,7 +61,6 @@ func VerifyPQC(data []byte) Result {
 	}
 	return Result{
 		Verdict: verifier.INDETERMINATE,
-		Code:    stubCode,
 		Reason:  stubReason,
 		Alg:     algMLDSA65,
 		Stub:    true,
@@ -72,12 +68,11 @@ func VerifyPQC(data []byte) Result {
 }
 
 // Verify runs the frozen v1 verifier, then optionally the PQC-1 stub.
-// enablePQC does not change the v1 verdict, code, reason, or evidence semantics.
+// enablePQC does not change the v1 verdict, reason, or evidence semantics.
 func Verify(data []byte, enablePQC bool) Combined {
 	v1 := verifier.VerifyJSON(data)
 	out := Combined{
 		Verdict: v1.Verdict,
-		Code:    v1.Code,
 		Reason:  v1.Reason,
 		PQC:     nil,
 	}

@@ -62,6 +62,7 @@ func runVerify(path string, pqc bool) int {
 		return 2
 	}
 
+	// Exit code follows the v1 verdict only. PQC never changes it.
 	switch result.Verdict {
 	case verifier.PASS:
 		return 0

@@ -63,6 +63,7 @@ func (s *Server) handleVerify(w http.ResponseWriter, r *http.Request) {
 func writeResult(w http.ResponseWriter, result v2.Combined) {
 	w.Header().Set("Content-Type", "application/json")
 
+	// HTTP status follows the v1 verdict only. The body is authoritative.
 	switch result.Verdict {
 	case verifier.PASS:
 		w.WriteHeader(http.StatusOK)

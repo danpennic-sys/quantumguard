@@ -35,11 +35,10 @@ Normative docs:
 | Type-Prefixed / versioned design  | DOCUMENTED            |
 | `CONTRACT-PQC-1.md`               | WRITTEN (stub)        |
 | `verifier/v2` package             | STUB SHIPPED          |
-| CLI `--pqc` / HTTP `?pqc=true`    | SHIPPED (opt-in stub). Not ML-DSA. |
+| CLI `--pqc` / HTTP `?pqc=true`    | SHIPPED (opt-in stub) |
 | Envelope goldens (`vectors/v2`)   | SHIPPED               |
-| `filippo.io/mldsa` (Go)           | NOT STARTED           |
-| `rust/qg-mldsa65` (`fips204`)     | CRATE ON MAIN. Claims real FIPS 204 verify. **Not** wired into `qg`. End-to-end product vectors: 0. Not a shippable claim. |
-| Product ML-DSA-65 verification    | NOT SHIPPED           |
+| filippo.io/mldsa integration      | NOT STARTED           |
+| Actual ML-DSA-65 verification     | NOT STARTED           |
 
 ## Still Open
 
