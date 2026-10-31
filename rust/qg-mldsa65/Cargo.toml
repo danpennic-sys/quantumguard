@@ -1,0 +1,23 @@
+[package]
+name = "qg-mldsa65"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "QuantumGuard ML-DSA-65 (FIPS 204) — real verify path aligned with QUANTUMGUARD-V2-PQC-CONTRACT"
+authors = ["danpennic-sys"]
+repository = "https://github.com/danpennic-sys/quantumguard"
+rust-version = "1.85"
+
+[dependencies]
+fips204 = "0.5"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+hex = "0.4"
+thiserror = "1"
+
+[dev-dependencies]
+rand_core = { version = "0.6", features = ["getrandom"] }
+
+[[bin]]
+name = "qg-mldsa65-verify"
+path = "src/main.rs"

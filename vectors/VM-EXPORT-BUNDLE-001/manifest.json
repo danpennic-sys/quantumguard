@@ -1,0 +1,67 @@
+{
+  "spec": "VM-EXPORT-BUNDLE-001",
+  "version": "1.0",
+  "description": "Conformance vectors for dual-hash export-bundle verifier",
+  "cases": [
+    {
+      "case_id": "01_valid_minimal",
+      "description": "Minimal valid bundle claiming state_hash only",
+      "expected_verdict": "PASS",
+      "expected_code": "OK"
+    },
+    {
+      "case_id": "02_state_hash_mismatch",
+      "description": "Claimed state_hash does not match recomputed value",
+      "expected_verdict": "FAIL",
+      "expected_code": "STATE_HASH_MISMATCH"
+    },
+    {
+      "case_id": "03_replay_merkle_mismatch",
+      "description": "Claimed replay_merkle_root does not match recomputed value",
+      "expected_verdict": "FAIL",
+      "expected_code": "REPLAY_MERKLE_MISMATCH"
+    },
+    {
+      "case_id": "04_both_hashes_claimed",
+      "description": "Bundle claims both state_hash and replay_merkle_root",
+      "expected_verdict": "FAIL",
+      "expected_code": "BOTH_HASHES_CLAIMED"
+    },
+    {
+      "case_id": "05_extra_file",
+      "description": "Unauthorized file present in extracted bundle",
+      "expected_verdict": "FAIL",
+      "expected_code": "EXTRA_FILE"
+    },
+    {
+      "case_id": "06_zip_slip",
+      "description": "Path contains directory separator or traversal",
+      "expected_verdict": "FAIL",
+      "expected_code": "ZIP_SLIP"
+    },
+    {
+      "case_id": "07_duplicate_path",
+      "description": "Same path appears more than once in files[]",
+      "expected_verdict": "FAIL",
+      "expected_code": "DUPLICATE_PATH"
+    },
+    {
+      "case_id": "08_created_at_tampered",
+      "description": "created_at altered after root_hash was computed",
+      "expected_verdict": "FAIL",
+      "expected_code": "CREATED_AT_TAMPER"
+    },
+    {
+      "case_id": "09_honest_stub",
+      "description": "Required check is still an honest NOT IMPLEMENTED stub",
+      "expected_verdict": "FAIL",
+      "expected_code": "NOT_IMPLEMENTED"
+    },
+    {
+      "case_id": "10_canonical_order",
+      "description": "Key order / whitespace change must not alter state_hash",
+      "expected_verdict": "PASS",
+      "expected_code": "OK"
+    }
+  ]
+}

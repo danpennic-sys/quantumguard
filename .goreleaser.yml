@@ -1,0 +1,84 @@
+# .goreleaser.yml
+version: 2
+
+project_name: quantumguard
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: qg
+    main: ./cmd/qg
+    binary: qg
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: qg-http
+    main: ./cmd/qg-http
+    binary: qg-http
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+archives:
+  - id: default
+    builds:
+      - qg
+      - qg-http
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE*
+      - README.md
+      - CONTRACT-v1.md
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+
+release:
+  github:
+    owner: danpennic-sys
+    name: quantumguard
+  draft: false
+  prerelease: auto
+  name_template: "QuantumGuard {{.Tag}}"

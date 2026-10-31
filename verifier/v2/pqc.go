@@ -10,6 +10,7 @@ import (
 // Result is the PQC-1 verification outcome. It never replaces the v1 verdict.
 type Result struct {
 	Verdict verifier.Verdict `json:"verdict"`
+	Code    string           `json:"code,omitempty"`
 	Reason  string           `json:"reason,omitempty"`
 	Alg     string           `json:"alg"`
 	Stub    bool             `json:"stub"`
@@ -17,10 +18,12 @@ type Result struct {
 
 // Combined is the CLI/HTTP envelope.
 //
-// v1 fields (verdict, reason) are produced solely by verifier.VerifyJSON.
+// v1 fields (verdict, code, reason) are produced solely by verifier.VerifyJSON.
 // PQC is null when the opt-in flag is disabled, and never mutates v1.
+// Code is the stable, normative reason code; Reason is non-normative prose.
 type Combined struct {
 	Verdict verifier.Verdict `json:"verdict"`
+	Code    string           `json:"code"`
 	Reason  string           `json:"reason,omitempty"`
 	PQC     *Result          `json:"pqc"`
 }

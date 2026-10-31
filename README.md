@@ -2,8 +2,12 @@
 
 Deterministic evidence verification. No network. No wall-clock. No external trust.
 
+**Operator Pages QuantumGuard.** This project is not QuantumGuard, Inc. (qguard.net) and not the unrelated QuantumGuardAI repository.
+
+**Claims card (v1):** Ed25519 only. One verifier. CLI and HTTP return only PASS, FAIL, or INDETERMINATE. The PQC track is a stub plus an unwired Rust crate. It is not a product claim. Release `v1.0.0` is the frozen drop. Operator Pack checkout is live.
+
 **v1 Status: FROZEN** (2026-09-09)  
-See `CONTRACT-v1.md` for the normative specification.
+See `CONTRACT-v1.md` for the normative specification. Gaps board: `PATCHES.md`.
 
 ## Contract v1 (frozen)
 
@@ -36,6 +40,7 @@ quantumguard/
 ├── http/              # HTTP handler package
 ├── vectors/           # conformance test vectors
 ├── evidence/          # (reserved)
+├── docs/              # domain bridges
 ├── README.md
 └── PATCHES.md
 ```
@@ -79,13 +84,41 @@ does not claim quantum resistance. See `CONTRACT-PQC-1.md`.
 
 CLI and HTTP must produce identical verdicts on every vector.
 
+## Domain profiles
+
+QuantumGuard is integrity-only. Domain policy lives in profiles:
+
+| Profile | Repo | Role |
+|---------|------|------|
+| Robotics Trust Profile (RTP) v1.0 | [robotics-trust-profile](https://github.com/danpennic-sys/robotics-trust-profile) | Kinematic / spatial / cross-sensor admissibility for robot GIRs |
+
+Deep bridge (canonical GIR hashing, dual-verdict audit, actuation interlock):  
+https://github.com/danpennic-sys/robotics-trust-profile/blob/main/docs/QUANTUMGUARD-BRIDGE.md
+
+Also see `docs/RTP.md` in this repo for a short pointer.
+
+## Operator Pack (commercial)
+
+Source and CONTRACT-v1 remain free (MIT OR Apache-2.0).
+
+**Operator Pack** adds signed binaries, air-gap runbooks, conformance kits, license files, and support under a commercial license.
+
+- **Buy now (one-time):** [Operator Pack — single site](https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01) — $490
+- **Buy now (yearly):** [Operator Pack — single site (annual)](https://buy.stripe.com/cNibJ24H8gEJcRteoN0ZW02) — $1,490/year
+- Private license repo (access after purchase): [danpennic-sys/quantumguard-operator](https://github.com/danpennic-sys/quantumguard-operator)
+- Contact / support: **danpennic@gmail.com**
+- Claims stay honest: no PQC, no network trust, no wall-clock inside the verifier
+
+See `MARKETING.md` and `docs/OPERATOR-PACK-CHECKOUT.md` for positioning and the fulfillment runbook.
+
 ## Non-goals (today)
 
 - Post-quantum signatures
 - Key registries / DNS / revocation
 - Wall-clock or freshness checks
 - Second verifier implementation
-- Payment integration
+- Built-in payment integration in this public repo
+- Domain geometry or kinematics (use RTP or other profiles)
 
 ## License
 

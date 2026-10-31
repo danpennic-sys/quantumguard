@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
+// Copyright (c) 2026 danpennic-sys
+
 // Package http provides the QuantumGuard HTTP /verify endpoint.
 // It calls the exact same deterministic verifier used by the CLI.
 package http
@@ -41,7 +44,7 @@ func (s *Server) handleVerify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := io.ReadAll(io.LimitReader(r.Body, 1<<20)) // 1 MiB limit
+	body, err := io.ReadAll(io.LimitReader(r.Body, 1<<20))
 	if err != nil {
 		out := v2.Combined{Verdict: verifier.INDETERMINATE, Reason: "failed to read body"}
 		if pqcEnabled(r) {
@@ -65,9 +68,9 @@ func writeResult(w http.ResponseWriter, result v2.Combined) {
 	case verifier.PASS:
 		w.WriteHeader(http.StatusOK)
 	case verifier.FAIL:
-		w.WriteHeader(http.StatusUnprocessableEntity) // 422
+		w.WriteHeader(http.StatusUnprocessableEntity)
 	default:
-		w.WriteHeader(http.StatusBadRequest) // 400 for INDETERMINATE
+		w.WriteHeader(http.StatusBadRequest)
 	}
 
 	_ = v2.Encode(w, result)

@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "code": "CREATED_AT_TAMPER",
+  "detail": "created_at is inside the signed region; any modification invalidates root_hash/signature"
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-10-23T15:00:00Z",
+  "replay_merkle_root": "0000000000000000000000000000000000000000000000000000000000000000",
+  "files": [
+    {"name": "bundle.json", "hash": "aaa", "size": 100}
+  ],
+  "events": [
+    {"id": "e1", "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"id": "e2", "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+  ]
+}

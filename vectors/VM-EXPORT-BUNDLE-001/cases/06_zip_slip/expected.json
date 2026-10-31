@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "code": "ZIP_SLIP",
+  "detail": "invalid entry name \"../evil.txt\" (subdirectories not allowed)"
+}

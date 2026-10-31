@@ -1,0 +1,6 @@
+{
+  "verdict": "PASS",
+  "code": "OK",
+  "computed_state_hash": "f85c68765a0c2a11099fa68d849c0c1456b41c0a826f2df0eafea44e72f147f6",
+  "note": "JCS canonicalization makes key order irrelevant"
+}

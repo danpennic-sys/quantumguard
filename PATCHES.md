@@ -1,4 +1,8 @@
-# Gaps Board — Updated 2026-09-14 (PQC-1 stub opt-in)
+# Gaps Board — Updated 2026-10-28 (checkout live)
+
+Checked against `main` and tag `v1.0.0` (`28045276`).
+`go test -race ./...` re-run locally on go1.23.12 linux/amd64 on 2026-10-28: PASS.
+The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–06 INDETERMINATE.
 
 ## Frozen / Done
 
@@ -12,10 +16,16 @@
 | Conformance vectors (v1)          | DONE        |
 | Three-verdict model               | LOCKED      |
 | v1 → v2 Upgrade Contract          | **WRITTEN** |
+| Tagged release `v1.0.0`           | **DONE** (published 2026-09-28). Unsigned binaries + `SHA256SUMS.txt`. Not HSM-signed. Do not move this tag. |
+| Go CI on `main`                   | **DONE** (`.github/workflows/ci.yml`). Node publish workflow removed 2026-10-26. |
+| Operator Pack checkout (one-time) | **LIVE** — https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01 ($490) |
+| Operator Pack checkout (yearly)   | **LIVE** — https://buy.stripe.com/cNibJ24H8gEJcRteoN0ZW02 ($1,490/year) |
 
 Normative docs:
 - `CONTRACT-v1.md`
 - `UPGRADE-v1-to-v2.md`
+
+`main` has moved past `v1.0.0` (reason codes, VM-EXPORT-BUNDLE-001, the Rust ML-DSA crate, CI). That delta is not a new release. Cutting another tag is a product decision, not a docs fix.
 
 ## PQC Track (v2)
 
@@ -32,13 +42,10 @@ Normative docs:
 
 ## Still Open
 
-| Item                        | Status                          |
-|-----------------------------|---------------------------------|
-| yourmodule L10 resolution   | UNRESOLVED                      |
-| CP-01 → CP-08               | EMPTY                           |
+| Item                        | Status                                                                 |
+|-----------------------------|------------------------------------------------------------------------|
 | Chat proxy payload          | **RETIRED 2026-09-12** — operatorpagesllc archived path; not in this tree |
-| Stripe / commercial path    | OFFER POSTED; checkout not live |
-| Tagged release              | NOT DONE                        |
+| Next tag after `v1.0.0`     | NOT CUT. Do not retag or move `v1.0.0`.                                |
 
 ## Discipline
 
@@ -47,3 +54,5 @@ Normative docs:
 - No silent modification of frozen behavior.
 - Replay harness remains the arbiter of correctness.
 - Chat proxy retirement is not a verifier change.
+- One verdict path. `rust/qg-mldsa65` and the VM-EXPORT tools do not replace `qg`.
+- Fulfillment remains manual (collaborator invite or signed drop). No webhook auto-mint.
