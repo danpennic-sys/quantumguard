@@ -68,11 +68,12 @@ func VerifyPQC(data []byte) Result {
 }
 
 // Verify runs the frozen v1 verifier, then optionally the PQC-1 stub.
-// enablePQC does not change the v1 verdict, reason, or evidence semantics.
+// enablePQC does not change the v1 verdict, code, reason, or evidence semantics.
 func Verify(data []byte, enablePQC bool) Combined {
 	v1 := verifier.VerifyJSON(data)
 	out := Combined{
 		Verdict: v1.Verdict,
+		Code:    v1.Code,
 		Reason:  v1.Reason,
 		PQC:     nil,
 	}
