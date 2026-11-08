@@ -1,0 +1,30 @@
+name: qg-mldsa65-once
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: f12ccc86630b1dcc5afcff77bd633fe29b4f30a4
+      - name: Install Rust 1.85.0
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.85.0 --profile minimal --component rustfmt
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+      - name: fmt, test, release
+        working-directory: rust/qg-mldsa65
+        run: |
+          set -o pipefail
+          {
+            rustc --version
+            cargo fmt --check
+            cargo test
+            cargo build --release
+          } 2>&1 | tee qg-mldsa65.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qg-mldsa65-log
+          path: rust/qg-mldsa65/qg-mldsa65.log
