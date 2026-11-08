@@ -2,7 +2,7 @@
 name = "qg-mldsa65"
 version = "0.1.0"
 edition = "2021"
-license = "MIT OR Apache-2.0"
+license = "LicenseRef-Proprietary"
 description = "QuantumGuard ML-DSA-65 (FIPS 204) — real verify path aligned with QUANTUMGUARD-V2-PQC-CONTRACT"
 authors = ["danpennic-sys"]
 repository = "https://github.com/danpennic-sys/quantumguard"

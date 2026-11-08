@@ -1,5 +1,6 @@
-// SPDX-License-Identifier: MIT OR Apache-2.0
-// Copyright (c) 2026 danpennic-sys
+// Copyright (c) 2026 danpennic-sys. All rights reserved.
+// Proprietary. This crate is not granted under MIT or Apache-2.0.
+// BinderSeal remains under the MIT License and is not part of this crate.
 //! QuantumGuard ML-DSA-65 (FIPS 204) real verify path.
 //! Contract: docs/QUANTUMGUARD-V2-PQC-CONTRACT.md
 //! Message = 32-byte payload_hash. Alg = ml-dsa-65. Empty context.
