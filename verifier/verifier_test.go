@@ -92,3 +92,56 @@ func TestV1ResultJSONUnchanged(t *testing.T) {
 		t.Fatalf("v1 verdict drifted: %s", raw)
 	}
 }
+
+func TestUppercaseHex_INDETERMINATE(t *testing.T) {
+	// Based on 01_known_good.json with payload_hash uppercased
+	data := []byte(`{
+  "alg": "ed25519",
+  "payload": "UXVhbnR1bUd1YXJkIGV2aWRlbmNlIHBheWxvYWQgdjEgLSBrbm93biBnb29k",
+  "payload_hash": "71B8737C3C1128BB466C53E821F5CF1A1E765B82041A60C46672226B73A16DFC",
+  "public_key": "79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664",
+  "signature": "a3fd916f92143149a71f02eb7d7220b432d28f4d160a1c53978966e362c0c273572627bed2915cbfefe0a05cecde42b9869a85d782f773a412c7d2759e169c00",
+  "version": "1"
+}`)
+	res := verifier.VerifyJSON(data)
+	if res.Verdict != verifier.INDETERMINATE || res.Code != verifier.CodeMalformedEncoding {
+		t.Fatalf("uppercase hex: want INDETERMINATE/E_MALFORMED_ENCODING, got %s/%s", res.Verdict, res.Code)
+	}
+}
+
+func TestUnknownField_INDETERMINATE(t *testing.T) {
+	data := []byte(`{
+  "alg": "ed25519",
+  "payload": "UXVhbnR1bUd1YXJkIGV2aWRlbmNlIHBheWxvYWQgdjEgLSBrbm93biBnb29k",
+  "payload_hash": "71b8737c3c1128bb466c53e821f5cf1a1e765b82041a60c46672226b73a16dfc",
+  "public_key": "79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664",
+  "signature": "a3fd916f92143149a71f02eb7d7220b432d28f4d160a1c53978966e362c0c273572627bed2915cbfefe0a05cecde42b9869a85d782f773a412c7d2759e169c00",
+  "version": "1",
+  "extra": "not allowed"
+}`)
+	res := verifier.VerifyJSON(data)
+	if res.Verdict != verifier.INDETERMINATE || res.Code != verifier.CodeMalformedJSON {
+		t.Fatalf("unknown field: want INDETERMINATE/E_MALFORMED_JSON, got %s/%s", res.Verdict, res.Code)
+	}
+}
+
+func TestTrailingData_INDETERMINATE(t *testing.T) {
+	data := []byte(`{"alg":"ed25519","payload":"UXVhbnR1bUd1YXJkIGV2aWRlbmNlIHBheWxvYWQgdjEgLSBrbm93biBnb29k","payload_hash":"71b8737c3c1128bb466c53e821f5cf1a1e765b82041a60c46672226b73a16dfc","public_key":"79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664","signature":"a3fd916f92143149a71f02eb7d7220b432d28f4d160a1c53978966e362c0c273572627bed2915cbfefe0a05cecde42b9869a85d782f773a412c7d2759e169c00","version":"1"}{"extra":true}`)
+	res := verifier.VerifyJSON(data)
+	if res.Verdict != verifier.INDETERMINATE || res.Code != verifier.CodeMalformedJSON {
+		t.Fatalf("trailing data: want INDETERMINATE/E_MALFORMED_JSON, got %s/%s", res.Verdict, res.Code)
+	}
+}
+
+func TestOversizedJSON_INDETERMINATE(t *testing.T) {
+	// > 1 MiB raw JSON
+	big := make([]byte, 1<<20+1)
+	for i := range big {
+		big[i] = 'a'
+	}
+	data := append([]byte(`{"alg":"ed25519","payload":"`), append(big, []byte(`","payload_hash":"71b8737c3c1128bb466c53e821f5cf1a1e765b82041a60c46672226b73a16dfc","public_key":"79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664","signature":"a3fd916f92143149a71f02eb7d7220b432d28f4d160a1c53978966e362c0c273572627bed2915cbfefe0a05cecde42b9869a85d782f773a412c7d2759e169c00","version":"1"}`)...)...)
+	res := verifier.VerifyJSON(data)
+	if res.Verdict != verifier.INDETERMINATE || res.Code != verifier.CodeMalformedEncoding {
+		t.Fatalf("oversized: want INDETERMINATE/E_MALFORMED_ENCODING, got %s/%s", res.Verdict, res.Code)
+	}
+}

@@ -25,13 +25,23 @@
 package verifier
 
 import (
+	"bytes"
 	"crypto/ed25519"
 	"crypto/sha256"
+	"crypto/subtle"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"strings"
+)
+
+const (
+	maxJSONBytes    = 1 << 20   // 1 MiB raw JSON
+	maxPayloadBytes = 512 << 10 // 512 KiB decoded payload
+	hexHashLen      = sha256.Size * 2
+	hexSigLen       = ed25519.SignatureSize * 2
+	hexPubLen       = ed25519.PublicKeySize * 2
 )
 
 // Verdict is the only allowed output of verification.
@@ -58,26 +68,36 @@ const (
 // Bundle is the v1 evidence bundle.
 type Bundle struct {
 	Version     string `json:"version"`
-	Payload     string `json:"payload"`      // base64
-	PayloadHash string `json:"payload_hash"` // hex
-	Signature   string `json:"signature"`    // hex
-	PublicKey   string `json:"public_key"`   // hex, 32-byte raw Ed25519
+	Payload     string `json:"payload"`
+	PayloadHash string `json:"payload_hash"`
+	Signature   string `json:"signature"`
+	PublicKey   string `json:"public_key"`
 	Alg         string `json:"alg"`
 }
 
 // Result is the deterministic verification outcome.
 type Result struct {
 	Verdict Verdict `json:"verdict"`
-	Code    string  `json:"code"`             // stable, normative
-	Reason  string  `json:"reason,omitempty"` // prose, non-normative
+	Code    string  `json:"code"`
+	Reason  string  `json:"reason,omitempty"`
 }
 
 // VerifyJSON accepts a raw JSON evidence bundle and returns a deterministic Result.
 // This is the single entry point used by both CLI and HTTP.
 func VerifyJSON(data []byte) Result {
+	if len(data) > maxJSONBytes {
+		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "JSON exceeds size limit"}
+	}
+
+	dec := json.NewDecoder(bytes.NewReader(data))
+	dec.DisallowUnknownFields()
+
 	var b Bundle
-	if err := json.Unmarshal(data, &b); err != nil {
+	if err := dec.Decode(&b); err != nil {
 		return Result{Verdict: INDETERMINATE, Code: CodeMalformedJSON, Reason: "malformed JSON"}
+	}
+	if dec.More() {
+		return Result{Verdict: INDETERMINATE, Code: CodeMalformedJSON, Reason: "trailing data after JSON"}
 	}
 	return Verify(b)
 }
@@ -96,42 +116,38 @@ func Verify(b Bundle) Result {
 	if b.Version != "1" {
 		return Result{Verdict: INDETERMINATE, Code: CodeUnsupportedVer, Reason: fmt.Sprintf("unsupported version: %q", b.Version)}
 	}
-
 	if b.Alg != "ed25519" {
 		return Result{Verdict: INDETERMINATE, Code: CodeUnsupportedAlg, Reason: fmt.Sprintf("unsupported alg: %q", b.Alg)}
+	}
+
+	if len(b.PayloadHash) != hexHashLen || !isLowerHex(b.PayloadHash) {
+		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "payload_hash must be lowercase hex of 32 bytes"}
+	}
+	if len(b.Signature) != hexSigLen || !isLowerHex(b.Signature) {
+		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "signature must be lowercase hex of 64 bytes"}
+	}
+	if len(b.PublicKey) != hexPubLen || !isLowerHex(b.PublicKey) {
+		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "public_key must be lowercase hex of 32 bytes"}
+	}
+
+	if len(b.Payload) > maxPayloadBytes*2 {
+		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "payload exceeds size limit"}
 	}
 
 	payload, err := base64.StdEncoding.DecodeString(b.Payload)
 	if err != nil {
 		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "payload is not valid base64"}
 	}
-
-	payloadHash, err := hex.DecodeString(b.PayloadHash)
-	if err != nil {
-		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "payload_hash is not valid hex"}
-	}
-	if len(payloadHash) != sha256.Size {
-		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: fmt.Sprintf("payload_hash must be %d bytes, got %d", sha256.Size, len(payloadHash))}
+	if len(payload) > maxPayloadBytes {
+		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "payload exceeds size limit"}
 	}
 
-	sig, err := hex.DecodeString(b.Signature)
-	if err != nil {
-		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "signature is not valid hex"}
-	}
-	if len(sig) != ed25519.SignatureSize {
-		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: fmt.Sprintf("signature must be %d bytes, got %d", ed25519.SignatureSize, len(sig))}
-	}
-
-	pub, err := hex.DecodeString(b.PublicKey)
-	if err != nil {
-		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: "public_key is not valid hex"}
-	}
-	if len(pub) != ed25519.PublicKeySize {
-		return Result{Verdict: INDETERMINATE, Code: CodeMalformedEncoding, Reason: fmt.Sprintf("public_key must be %d bytes, got %d", ed25519.PublicKeySize, len(pub))}
-	}
+	payloadHash, _ := hex.DecodeString(b.PayloadHash)
+	sig, _ := hex.DecodeString(b.Signature)
+	pub, _ := hex.DecodeString(b.PublicKey)
 
 	computed := sha256.Sum256(payload)
-	if !hmacEqual(computed[:], payloadHash) {
+	if subtle.ConstantTimeCompare(computed[:], payloadHash) != 1 {
 		return Result{Verdict: FAIL, Code: CodeHashMismatch, Reason: "payload_hash does not match SHA-256 of payload"}
 	}
 
@@ -142,13 +158,11 @@ func Verify(b Bundle) Result {
 	return Result{Verdict: PASS, Code: CodeOK, Reason: "valid"}
 }
 
-func hmacEqual(a, b []byte) bool {
-	if len(a) != len(b) {
-		return false
+func isLowerHex(s string) bool {
+	for _, c := range s {
+		if !((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) {
+			return false
+		}
 	}
-	var v byte
-	for i := 0; i < len(a); i++ {
-		v |= a[i] ^ b[i]
-	}
-	return v == 0
+	return true
 }
