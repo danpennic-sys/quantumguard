@@ -23,12 +23,7 @@ pub struct PqcResult {
 }
 
 /// Verify ML-DSA-65 over QuantumGuard message bytes (raw payload_hash).
-pub fn verify_mldsa65(
-    public_key: &[u8],
-    message: &[u8],
-    signature: &[u8],
-    alg: &str,
-) -> PqcResult {
+pub fn verify_mldsa65(public_key: &[u8], message: &[u8], signature: &[u8], alg: &str) -> PqcResult {
     if alg != "ml-dsa-65" {
         return PqcResult {
             verdict: "INDETERMINATE".into(),
@@ -42,7 +37,10 @@ pub fn verify_mldsa65(
         return PqcResult {
             verdict: "INDETERMINATE".into(),
             code: "E_PQC_CANONICAL".into(),
-            reason: format!("payload_hash must be {MESSAGE_LEN} bytes, got {}", message.len()),
+            reason: format!(
+                "payload_hash must be {MESSAGE_LEN} bytes, got {}",
+                message.len()
+            ),
             alg: "ml-dsa-65".into(),
             stub: false,
         };
@@ -51,7 +49,10 @@ pub fn verify_mldsa65(
         return PqcResult {
             verdict: "INDETERMINATE".into(),
             code: "E_PQC_MALFORMED".into(),
-            reason: format!("public key must be {PUBLIC_KEY_LEN} bytes, got {}", public_key.len()),
+            reason: format!(
+                "public key must be {PUBLIC_KEY_LEN} bytes, got {}",
+                public_key.len()
+            ),
             alg: "ml-dsa-65".into(),
             stub: false,
         };
@@ -60,7 +61,10 @@ pub fn verify_mldsa65(
         return PqcResult {
             verdict: "INDETERMINATE".into(),
             code: "E_PQC_MALFORMED".into(),
-            reason: format!("signature must be {SIGNATURE_LEN} bytes, got {}", signature.len()),
+            reason: format!(
+                "signature must be {SIGNATURE_LEN} bytes, got {}",
+                signature.len()
+            ),
             alg: "ml-dsa-65".into(),
             stub: false,
         };
@@ -78,7 +82,7 @@ pub fn verify_mldsa65(
             };
         }
     };
-    let pk = match ml_dsa_65::PublicKey::try_from_bytes(&pk_arr) {
+    let pk = match ml_dsa_65::PublicKey::try_from_bytes(pk_arr) {
         Ok(pk) => pk,
         Err(_) => {
             return PqcResult {
@@ -132,7 +136,10 @@ pub fn message_from_bundle_json(data: &[u8]) -> Result<[u8; MESSAGE_LEN], String
     let b: Bundle = serde_json::from_slice(data).map_err(|e| e.to_string())?;
     let bytes = hex::decode(b.payload_hash.trim()).map_err(|e| e.to_string())?;
     if bytes.len() != MESSAGE_LEN {
-        return Err(format!("payload_hash must be {MESSAGE_LEN} bytes, got {}", bytes.len()));
+        return Err(format!(
+            "payload_hash must be {MESSAGE_LEN} bytes, got {}",
+            bytes.len()
+        ));
     }
     let mut out = [0u8; MESSAGE_LEN];
     out.copy_from_slice(&bytes);
@@ -142,7 +149,7 @@ pub fn message_from_bundle_json(data: &[u8]) -> Result<[u8; MESSAGE_LEN], String
 #[cfg(test)]
 mod tests {
     use super::*;
-    use fips204::traits::{KeyGen, Signer};
+    use fips204::traits::Signer;
 
     #[test]
     fn roundtrip_sign_verify() {
