@@ -4,7 +4,7 @@ Deterministic evidence verification. No network. No wall-clock. No external trus
 
 **Operator Pages QuantumGuard.** This project is not QuantumGuard, Inc. (qguard.net) and not the unrelated QuantumGuardAI repository.
 
-**Claims card (v1):** Ed25519 only. One verifier. CLI and HTTP return only PASS, FAIL, or INDETERMINATE. The PQC track is a stub plus an unwired Rust crate. It is not a product claim. Release `v1.0.0` is the frozen drop. Operator Pack checkout is live.
+**Claims card (v1):** Ed25519 only. One verifier. CLI and HTTP return only PASS, FAIL, or INDETERMINATE. The opt-in PQC path is still a stub. `rust/qg-mldsa65` is not wired into that path. It has offline NIST ACVP evidence and is not a product claim. Release `v1.0.0` is the frozen drop. Operator Pack checkout is live.
 
 **v1 Status: FROZEN** (2026-09-09)  
 See `CONTRACT-v1.md` for the normative specification. Gaps board: `PATCHES.md`.

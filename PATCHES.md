@@ -3,6 +3,7 @@
 Checked against `main` and tag `v1.0.0` (`28045276`).
 `go test -race ./...` re-run locally on go1.23.12 linux/amd64 on 2026-10-28: PASS.
 The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–06 INDETERMINATE.
+2026-11-10: the PQC row below now records the unwired Rust NIST run. The 2026-10-28 Go check was not re-run for this note.
 
 ## Frozen / Done
 
@@ -38,7 +39,7 @@ Normative docs:
 | CLI `--pqc` / HTTP `?pqc=true`    | SHIPPED (opt-in stub) |
 | Envelope goldens (`vectors/v2`)   | SHIPPED               |
 | filippo.io/mldsa integration      | NOT STARTED           |
-| Actual ML-DSA-65 verification     | NOT STARTED           |
+| Actual ML-DSA-65 verification     | RUST CRATE ONLY. NIST ACVP in `rust/qg-mldsa65` (`77a9205`). Not wired to `qg`. Product `--pqc` path remains the stub. |
 
 ## Still Open
 
