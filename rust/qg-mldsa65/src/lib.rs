@@ -3,8 +3,9 @@
 // BinderSeal remains under the MIT License and is not part of this crate.
 //! QuantumGuard ML-DSA-65 (FIPS 204) real verify path.
 //! Contract: docs/QUANTUMGUARD-V2-PQC-CONTRACT.md
-//! Message = 32-byte payload_hash. Alg = ml-dsa-65. Empty context.
-//! stub is always false — real verify or form reject.
+//! `verify_mldsa65` message = 32-byte payload_hash, alg = ml-dsa-65, empty context.
+//! `verify_external` and `verify_prehash` are the FIPS 204 verify paths used by the
+//! NIST ACVP suite (arbitrary message, context, and HashML-DSA). stub is always false.
 
 use fips204::ml_dsa_65::{self, PK_LEN, SIG_LEN};
 use fips204::traits::{SerDes, Verifier};
@@ -46,85 +47,116 @@ pub fn verify_mldsa65(public_key: &[u8], message: &[u8], signature: &[u8], alg: 
             stub: false,
         };
     }
+    // QuantumGuard evidence: pure ML-DSA over the 32-byte payload_hash, empty context.
+    verify_external(public_key, message, signature, &[])
+}
+
+/// FIPS 204 `ML-DSA.Verify` for ML-DSA-65. Message and context are the NIST inputs,
+/// not the QuantumGuard 32-byte payload hash. Context longer than 255 bytes is a
+/// failed verify, matching the standard.
+pub fn verify_external(
+    public_key: &[u8],
+    message: &[u8],
+    signature: &[u8],
+    context: &[u8],
+) -> PqcResult {
+    match decode_key_sig(public_key, signature) {
+        Ok((pk, sig)) => verify_decoded(&pk, message, &sig, context),
+        Err(result) => result,
+    }
+}
+
+/// FIPS 204 `HashML-DSA.Verify` for ML-DSA-65. `digest` is PH(message), `hash_oid`
+/// is the DER OID of PH. Used by the NIST pre-hash groups.
+pub fn verify_prehash(
+    public_key: &[u8],
+    digest: &[u8],
+    signature: &[u8],
+    context: &[u8],
+    hash_oid: &[u8],
+) -> PqcResult {
+    let (pk, sig) = match decode_key_sig(public_key, signature) {
+        Ok(v) => v,
+        Err(result) => return result,
+    };
+    if pk.hash_verify(digest, &sig, context, hash_oid) {
+        pass()
+    } else {
+        fail()
+    }
+}
+
+fn decode_key_sig(
+    public_key: &[u8],
+    signature: &[u8],
+) -> Result<(ml_dsa_65::PublicKey, [u8; SIG_LEN]), PqcResult> {
     if public_key.len() != PUBLIC_KEY_LEN {
-        return PqcResult {
-            verdict: "INDETERMINATE".into(),
-            code: "E_PQC_MALFORMED".into(),
-            reason: format!(
-                "public key must be {PUBLIC_KEY_LEN} bytes, got {}",
-                public_key.len()
-            ),
-            alg: "ml-dsa-65".into(),
-            stub: false,
-        };
+        return Err(malformed(format!(
+            "public key must be {PUBLIC_KEY_LEN} bytes, got {}",
+            public_key.len()
+        )));
     }
     if signature.len() != SIGNATURE_LEN {
-        return PqcResult {
-            verdict: "INDETERMINATE".into(),
-            code: "E_PQC_MALFORMED".into(),
-            reason: format!(
-                "signature must be {SIGNATURE_LEN} bytes, got {}",
-                signature.len()
-            ),
-            alg: "ml-dsa-65".into(),
-            stub: false,
-        };
+        return Err(malformed(format!(
+            "signature must be {SIGNATURE_LEN} bytes, got {}",
+            signature.len()
+        )));
     }
-
     let pk_arr: [u8; PK_LEN] = match public_key.try_into() {
         Ok(a) => a,
-        Err(_) => {
-            return PqcResult {
-                verdict: "INDETERMINATE".into(),
-                code: "E_PQC_MALFORMED".into(),
-                reason: "public key decode failed".into(),
-                alg: "ml-dsa-65".into(),
-                stub: false,
-            };
-        }
+        Err(_) => return Err(malformed("public key decode failed")),
     };
     let pk = match ml_dsa_65::PublicKey::try_from_bytes(pk_arr) {
         Ok(pk) => pk,
-        Err(_) => {
-            return PqcResult {
-                verdict: "INDETERMINATE".into(),
-                code: "E_PQC_MALFORMED".into(),
-                reason: "public key decode failed".into(),
-                alg: "ml-dsa-65".into(),
-                stub: false,
-            };
-        }
+        Err(_) => return Err(malformed("public key decode failed")),
     };
     let sig_arr: [u8; SIG_LEN] = match signature.try_into() {
         Ok(a) => a,
-        Err(_) => {
-            return PqcResult {
-                verdict: "INDETERMINATE".into(),
-                code: "E_PQC_MALFORMED".into(),
-                reason: "signature decode failed".into(),
-                alg: "ml-dsa-65".into(),
-                stub: false,
-            };
-        }
+        Err(_) => return Err(malformed("signature decode failed")),
     };
+    Ok((pk, sig_arr))
+}
 
-    // Empty context: Pure ML-DSA (CONTRACT-PQC-1).
-    if pk.verify(message, &sig_arr, &[]) {
-        PqcResult {
-            verdict: "PASS".into(),
-            code: "OK".into(),
-            reason: "valid".into(),
-            alg: "ml-dsa-65".into(),
-            stub: false,
-        }
+fn verify_decoded(
+    pk: &ml_dsa_65::PublicKey,
+    message: &[u8],
+    signature: &[u8; SIG_LEN],
+    context: &[u8],
+) -> PqcResult {
+    if pk.verify(message, signature, context) {
+        pass()
     } else {
-        PqcResult {
-            verdict: "FAIL".into(),
-            code: "E_PQC_SIG_FAIL".into(),
-            reason: "ML-DSA-65 signature verification failed".into(),
-            alg: "ml-dsa-65".into(),
-            stub: false,
-        }
+        fail()
+    }
+}
+
+fn pass() -> PqcResult {
+    PqcResult {
+        verdict: "PASS".into(),
+        code: "OK".into(),
+        reason: "valid".into(),
+        alg: "ml-dsa-65".into(),
+        stub: false,
+    }
+}
+
+fn fail() -> PqcResult {
+    PqcResult {
+        verdict: "FAIL".into(),
+        code: "E_PQC_SIG_FAIL".into(),
+        reason: "ML-DSA-65 signature verification failed".into(),
+        alg: "ml-dsa-65".into(),
+        stub: false,
+    }
+}
+
+fn malformed(reason: impl Into<String>) -> PqcResult {
+    PqcResult {
+        verdict: "INDETERMINATE".into(),
+        code: "E_PQC_MALFORMED".into(),
+        reason: reason.into(),
+        alg: "ml-dsa-65".into(),
+        stub: false,
     }
 }
 
@@ -184,5 +216,19 @@ mod tests {
     fn bad_message_len() {
         let r = verify_mldsa65(&[0u8; PK_LEN], &[0u8; 31], &[0u8; SIG_LEN], "ml-dsa-65");
         assert_eq!(r.code, "E_PQC_CANONICAL");
+    }
+
+    #[test]
+    fn external_accepts_non_canonical_message() {
+        let (pk, sk) = ml_dsa_65::try_keygen().expect("keygen");
+        let msg = [0x5au8; 100];
+        let ctx = b"ctx";
+        let sig = sk.try_sign(&msg, ctx).expect("sign");
+        let pk_bytes = pk.into_bytes();
+        let got = verify_external(&pk_bytes, &msg, &sig, ctx);
+        assert_eq!(got.verdict, "PASS");
+        assert!(!got.stub);
+        let gated = verify_mldsa65(&pk_bytes, &msg, &sig, "ml-dsa-65");
+        assert_eq!(gated.code, "E_PQC_CANONICAL");
     }
 }

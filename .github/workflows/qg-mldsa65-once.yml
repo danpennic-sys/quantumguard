@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: f12ccc86630b1dcc5afcff77bd633fe29b4f30a4
       - name: Install Rust 1.85.0
         run: |
           curl --proto '=https' --tlsv1.2 -fsSL https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.85.0 --profile minimal --component rustfmt

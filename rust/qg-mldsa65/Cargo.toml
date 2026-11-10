@@ -17,6 +17,11 @@ thiserror = "1"
 
 [dev-dependencies]
 rand_core = { version = "0.6", features = ["getrandom"] }
+# Same crate, so `cargo test` enables the NIST internal hooks. Release builds do not.
+fips204 = { version = "0.5", features = ["acvp-internal"] }
+sha2 = { version = "0.10", default-features = false }
+sha3 = { version = "0.10", default-features = false }
+flate2 = "1"
 
 [[bin]]
 name = "qg-mldsa65-verify"
