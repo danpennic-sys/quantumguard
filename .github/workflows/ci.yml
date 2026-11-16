@@ -31,6 +31,19 @@ jobs:
       - name: Test
         run: go test -race ./...
 
+      - name: Boundary gate
+        run: |
+          # Fail if product path imports the unwired Rust crate or forbidden packages
+          if grep -r --include='*.go' -E 'qg-mldsa65|quantumguard/rust' . --exclude-dir=rust; then
+            echo "ERROR: Rust ML-DSA crate imported into product path"
+            exit 1
+          fi
+          if grep -r --include='*.go' -E '"net/|"time"' verifier/; then
+            echo "ERROR: network or time package in verifier"
+            exit 1
+          fi
+          echo "Boundary gate passed"
+
       - name: Build qg
         run: go build -o qg ./cmd/qg
 
