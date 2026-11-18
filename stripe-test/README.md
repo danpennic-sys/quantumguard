@@ -4,7 +4,7 @@ This directory is **not** the Operator Pack.
 
 | | This harness | Operator Pack (the seat) |
 |---|---|---|
-| Amount | $10 | $490 once, or $1,490/year |
+| Amount | $10 | $490 once, or $1,495/year |
 | Mode | Stripe test mode only | Live Payment Link, created in the Dashboard |
 | Proves | Webhook signature + `payments.json` | A paid seat |
 | Connects to `qg` | No | No. Fulfillment is a human, after payment |
