@@ -104,7 +104,7 @@ Source and CONTRACT-v1 remain free (MIT OR Apache-2.0).
 **Operator Pack** adds signed binaries, air-gap runbooks, conformance kits, license files, and support under a commercial license.
 
 - **Buy now (one-time):** [Operator Pack — single site](https://buy.stripe.com/5kQaEYc9AewBaJleoN0ZW01) — $490
-- **Buy now (yearly):** [Operator Pack — single site (annual)](https://buy.stripe.com/cNibJ24H8gEJcRteoN0ZW02) — $1,490/year
+- **Buy now (yearly):** [Operator Pack — single site (annual)](https://buy.stripe.com/cNibJ24H8gEJcRteoN0ZW02) — $1,495/year
 - Private license repo (access after purchase): [danpennic-sys/quantumguard-operator](https://github.com/danpennic-sys/quantumguard-operator)
 - Contact / support: **danpennic@gmail.com**
 - Claims stay honest: no PQC, no network trust, no wall-clock inside the verifier
