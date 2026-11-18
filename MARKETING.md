@@ -114,7 +114,7 @@ Everything else layers on top without breaking the invariants.
 |----------------|---------------------------------------------|----------|
 | GitHub public  | Open core + storefront section in README    | Done     |
 | GitHub private | Operator Pack license repo                  | Done     |
-| Stripe         | Checkout for Operator Pack                  | Next     |
+| Stripe         | Checkout for Operator Pack                  | Live     |
 | X / Twitter    | Post short announcement                     | High     |
 | LinkedIn       | Post longer version                         | Medium   |
 | Docs / blog    | Optional deeper write-up later              | Low      |
