@@ -1,6 +1,6 @@
 # QuantumGuard — Marketing Hub
 
-**Status:** Source and `v1.0.0` are public. Operator Pack checkout is **not live**. Do not say "ready to buy" until a Stripe Payment Link actually charges the list price.  
+**Status:** Source and `v1.0.0` are public. Operator Pack checkout is **live**. One-time link charges $490. Yearly link charges $1,495. Do not publish a list price the link does not charge.  
 **Product truth:** v1 is classical (Ed25519), deterministic, offline. PQC is reserved, not shipped.
 
 ---
@@ -63,7 +63,7 @@ Secondary:
 3. Public README links to purchase contact; private repo holds licensed assets.
 
 **Pricing (list)**  
-- Operator Pack single site: $490 one-time or $1,490/year  
+- Operator Pack single site: $490 one-time or $1,495/year  
 - Air-gap / site license: custom  
 Contact: danpennic@gmail.com
 
