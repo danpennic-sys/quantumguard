@@ -5,6 +5,7 @@ Checked against `main` and tag `v1.0.0` (`28045276`).
 The six v1 vectors were re-run through `qg verify`: 01 PASS, 02–04 FAIL, 05–06 INDETERMINATE.
 2026-11-10: the PQC row below now records the unwired Rust NIST run. The 2026-10-28 Go check was not re-run for this note.
 2026-11-18: yearly checkout figure corrected from $1,490 to $1,495. Live link unit_amount is 149500 cents. The $490 one-time link (49000 cents) was re-read the same day and left unchanged.
+2026-11-22: those two live links were re-read. One-time is still 49000 cents USD. Yearly is still 149500 cents USD per year. No price was changed. The landing-site link that contains both items is recorded in `docs/OPERATOR-PACK-CHECKOUT.md`.
 
 ## Frozen / Done
 

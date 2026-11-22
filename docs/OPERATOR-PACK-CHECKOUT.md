@@ -14,6 +14,13 @@ Those binaries are unsigned. `SHA256SUMS.txt` on that release is the integrity r
 
 2026-11-18 re-read: the yearly link shows $1,495.00 due today, unit_amount 149500, interval year. The earlier 149000 figure did not match the charge. Do not open a replacement price at 149000.
 
+2026-11-22 re-read, no charge sent. Both links are still livemode and the amounts are unchanged.
+
+- One-time link: mode `payment`, price `price_1UO8XSKCM4PgZoVF1frIZxdg`, 49000 cents USD, one-time. The product name on that price is `Operator Pages`, not the runbook name below.
+- Yearly link: mode `subscription`, price `price_1UVgKaKCM4PgZoVFD5lGs1ft`, 149500 cents USD, interval `year`. The product name on that price is `Quantomguard yearly`, spelled that way.
+
+The public landing checkout is a third live link, `https://buy.stripe.com/dRmaEYb5w2NT2cP2G50ZW03`. It is mode `subscription` and includes both prices above. It is not a substitute for either single link.
+
 ## What the buyer is paying for
 
 - Operator Pages QuantumGuard, Operator Pack, single site
